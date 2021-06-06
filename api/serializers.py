@@ -4,6 +4,15 @@ from rest_framework.validators import UniqueTogetherValidator
 from .models import Post, Comment, Follow, User, Group
 
 
+class UserSerializer(serializers.ModelSerializer):
+    posts = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    following = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'posts', 'following']
+
+
 class PostSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
     group = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())

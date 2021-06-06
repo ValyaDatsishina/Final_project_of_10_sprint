@@ -7,7 +7,12 @@ from rest_framework.response import Response
 
 from .models import Post, Comment, User, Follow, Group
 from .permissions import IsAuthorOrReadOnly
-from .serializers import PostSerializer, CommentSerializer, FollowSerializer, GroupSerializer
+from .serializers import PostSerializer, CommentSerializer, FollowSerializer, GroupSerializer, UserSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -75,7 +80,7 @@ class FollowViewSet(viewsets.ModelViewSet):
     serializer_class = FollowSerializer
     permission_classes = [IsAuthorOrReadOnly, ]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['following__username', ]
+    search_fields = ['=following__username', '=user__username']
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
